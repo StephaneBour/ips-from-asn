@@ -44,15 +44,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.17.2
-        id: semvers
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DRY_RUN: true
-          RELEASE_BRANCHES: .*
-          DEFAULT_BUMP: patch
+
+      - name: 'Get next minor version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@master"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
 
       - name: Create Release
         id: create_release
@@ -60,8 +62,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.semvers.outputs.new_tag }}
-          release_name: Release ${{ steps.semvers.outputs.new_tag }}
+          tag_name: ${{ steps.semvers.outputs.patch }}
+          release_name: Release ${{ steps.semvers.outputs.patch }}
           draft: false
           prerelease: false
 
