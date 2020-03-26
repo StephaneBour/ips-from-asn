@@ -2,8 +2,6 @@ on:
   schedule:
     - cron:  '0 0 * * *'
   push:
-    branches:
-      - master
 
 name: Daily Update
 
@@ -37,7 +35,7 @@ jobs:
         run: |
           if cmp -s "ips_v4.txt" "latest/ips_v4.txt" && cmp -s "ips_v6.txt" "latest/ips_v6.txt"
           then
-            exit 2
+            exit 78
           fi
 
       - name: 'Get all tags'
